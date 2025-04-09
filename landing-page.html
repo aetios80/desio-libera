@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desio Libera - Lista Civica</title>
+    <!-- Font Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <!-- GSAP per animazioni fluide -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Libreria per effetti di parallasse -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"></script>
+    <!-- AOS per animazioni allo scroll -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Struttura principale */
+        .section {
+            position: relative;
+            min-height: 100vh;
+            padding: 80px 0;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Header e navigazione */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        header.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        header.header-hidden {
+            transform: translateY(-100%);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            margin-right: 15px;
+            height: 50px;
+            width: auto;
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
+            transition: all 0.5s ease;
+        }
+        
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            transition: color 0.3s ease;
+        }
+        
+        .logo:hover .logo-img {
+            transform: rotate(10deg);
+            filter: drop-shadow(0 0 8px rgba(254, 23, 22, 0.5));
+        }
+        
+        header.scrolled .logo {
+            color: #333;
+        }
+        
+        header.scrolled .logo-text {
+            color: #333;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #FE1716;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        header.scrolled .nav-links a {
+            color: #333;
+        }
+        
+        .nav-links a:hover {
+            color: #FE1716;
+        }
+        
+        /* Hero section */
+        .hero {
+            background-color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            color: #fff;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #FE1716;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover::after {
+            transform: translateX(0);
+        }
+        
+        .btn:hover {
+            background-color: #e01010;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(254, 23, 22, 0.3);
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background-color: #FE1716;
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+            z-index: 1;
+            transform-origin: center right;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+        
+        .shape1 {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+        }
+        
+        .shape2 {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+        }
+        
+        .shape3 {
+            width: 80px;
+            height: 80px;
+            bottom: 15%;
+            left: 20%;
+        }
+        
+        .shape4 {
+            width: 120px;
+            height: 120px;
+            top: 35%;
+            right: 20%;
+        }
+        
+        /* Elementi del principio politico */
+        .principle {
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .principle:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+        
+        .principle-content {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .principle-text {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 50px;
+        }
+        
+        .principle-image {
+            flex: 1;
+            min-width: 300px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .principle-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .principle-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .principle:nth-child(even) .principle-content {
+            flex-direction: row-reverse;
+        }
+        
+        .principle:nth-child(even) .principle-text {
+            padding-right: 0;
+            padding-left: 50px;
+        }
+        
+        .principle h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .principle p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #666;
+        }
+        
+        /* Sezione testimonianza con parallasse */
+        .testimonial {
+            background: linear-gradient(rgba(254, 23, 22, 0.85), rgba(254, 23, 22, 0.85)), url('1080.png');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonial-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: 1;
+        }
+        
+        .testimonial-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .testimonial blockquote {
+            font-size: 1.8rem;
+            font-style: italic;
+            margin-bottom: 30px;
+            position: relative;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .testimonial blockquote::before,
+        .testimonial blockquote::after {
+            content: """;
+            font-size: 4rem;
+            position: absolute;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .testimonial blockquote::before {
+            top: -20px;
+            left: -20px;
+        }
+        
+        .testimonial blockquote::after {
+            content: """;
+            bottom: -60px;
+            right: -20px;
+        }
+        
+        .testimonial cite {
+            font-style: normal;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        /* Sezione del team */
+        .team {
+            background-color: #fff;
+            text-align: center;
+        }
+        
+        .team h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #333;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .team h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #FE1716;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .team-member {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+        
+        .member-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        .member-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 20px;
+            transform: translateY(0);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .member-name {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .member-role {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .member-bio {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .team-member:hover .member-info {
+            transform: translateY(-10px);
+        }
+        
+        .team-member:hover .member-bio {
+            opacity: 1;
+            max-height: 100px;
+        }
+        
+        /* Sezione CTA */
+        .cta {
+            background: linear-gradient(135deg, #FE1716, #c91312);
+            color: #fff;
+            text-align: center;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-overlay {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+            z-index: 1;
+        }
+        
+        .cta h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta p {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta .btn {
+            background-color: #fff;
+            color: #FE1716;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta .btn:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 50px 0;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .footer-logo {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-logo h3 {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-links h4 {
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #FE1716;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        /* Media queries */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .principle-content {
+                flex-direction: column !important;
+            }
+            
+            .principle-text, .principle:nth-child(even) .principle-text {
+                padding: 0;
+                margin-bottom: 30px;
+            }
+            
+            .principle-image {
+                width: 100%;
+            }
+            
+            .testimonial {
+                padding: 80px 0;
+            }
+            
+            .testimonial blockquote {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Stile per il menu hamburger */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            position: relative;
+            width: 30px;
+            height: 25px;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            display: block;
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background: #fff;
+            border-radius: 3px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+
+        .menu-toggle span:nth-child(1) {
+            top: 0px;
+        }
+
+        .menu-toggle span:nth-child(2) {
+            top: 10px;
+        }
+
+        .menu-toggle span:nth-child(3) {
+            top: 20px;
+        }
+
+        /* Cambio colore delle barre quando l'header è scrolled */
+        header.scrolled .menu-toggle span {
+            background: #333;
+        }
+
+        /* Stato attivo del menu hamburger (X) */
+        .menu-toggle.active span:nth-child(1) {
+            top: 10px;
+            transform: rotate(135deg);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+            left: -60px;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            top: 10px;
+            transform: rotate(-135deg);
+        }
+
+        /* Layout responsive per il menu */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background-color: #fff;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                z-index: 1000;
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 20px 0;
+            }
+            
+            .nav-links a {
+                color: #333 !important;
+                font-size: 1.2rem;
+            }
+            
+            /* Overlay scuro quando il menu è aperto */
+            .menu-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .menu-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            /* Header compatto e sempre visibile durante lo scroll in mobile */
+            header.header-hidden {
+                transform: translateY(0);
+                background-color: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+            }
+            
+            header.header-hidden .logo-text,
+            header.header-hidden .menu-toggle span {
+                color: #333;
+                background: #333;
+            }
+            
+            /* Garantisce che il logo rimanga visibile */
+            .header-content {
+                padding: 0 15px;
+            }
+        }
+
+        /* Versione mini-header durante lo scroll */
+        .mini-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            padding: 10px 0;
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .mini-header.visible {
+            transform: translateY(0);
+        }
+
+        .mini-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .mini-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .mini-logo-img {
+            height: 40px;
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .mini-logo-text {
+            color: #333;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Miglioramenti responsivi generali */
+        @media (max-width: 576px) {
+            .section {
+                padding: 60px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .principle h2 {
+                font-size: 1.8rem;
+            }
+            
+            .testimonial blockquote {
+                font-size: 1.2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+            
+            .cta h2 {
+                font-size: 2rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        /* Miglioramenti responsivi generali */
+        @media (max-width: 768px) {
+            .principle-content {
+                display: block;
+            }
+            
+            .principle-text {
+                padding: 0 0 30px 0 !important;
+            }
+            
+            .principle-image {
+                height: 300px;
+            }
+            
+            /* Card layout per i contenuti in mobile */
+            .section {
+                padding: 50px 0;
+            }
+            
+            .principle {
+                padding: 20px;
+                margin: 0 20px 40px;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            }
+            
+            .principle:nth-child(odd) {
+                background-color: #ffffff;
+            }
+            
+            /* Miglioramento spazio interno container su mobile */
+            .container {
+                padding: 0 20px;
+            }
+            
+            /* Regolazione team grid */
+            .team-grid {
+                gap: 20px;
+            }
+            
+            .team-member {
+                margin-bottom: 10px;
+            }
+            
+            /* Footer su mobile */
+            .footer-content {
+                text-align: center;
+            }
+            
+            .footer-logo, .footer-links {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Miglioramenti per schermi molto piccoli */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .testimonial blockquote {
+                font-size: 1.1rem;
+                padding: 0 20px;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .principle h2 {
+                font-size: 1.6rem;
+            }
+            
+            /* Migliorare leggibilità testo su schermi piccoli */
+            body {
+                font-size: 16px;
+            }
+            
+            p {
+                line-height: 1.5;
+            }
+        }
+
+        /* Ottimizzazioni per tablet */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                padding: 0 40px;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .principle h2 {
+                font-size: 2.2rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+
+        /* Ottimizzazioni per garantire la leggibilità del testo su sfondi diversi */
+        .hero-content {
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .testimonial blockquote {
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Miglioramenti all'accessibilità */
+        .btn:focus, 
+        .nav-links a:focus,
+        .menu-toggle:focus {
+            outline: 2px solid #FE1716;
+            outline-offset: 2px;
+        }
+
+        /* Ottimizzazione per performance - prevenire layout shift */
+        .hero, .team-member, .principle-image {
+            contain: layout paint;
+        }
+
+        /* Migliorare performance di scroll */
+        .section {
+            will-change: transform;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header con navbar -->
+    <header id="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <svg class="logo-img" id="logo-img" width="50" height="50" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Il codice SVG del logo rimane invariato -->
+                    <circle cx="150" cy="150" r="150" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+                    <text x="52" y="90" font-family="Montserrat, sans-serif" font-weight="700" font-size="40" fill="#000000">Desio</text>
+                    <text x="52" y="140" font-family="Montserrat, sans-serif" font-weight="700" font-size="40" fill="#000000">Libera</text>
+                    <!-- Asterisco fisso -->
+                    <path id="asterisk" d="M215,150 L215,130 M215,150 L215,170 M215,150 L195,140 M215,150 L235,140 M215,150 L195,160 M215,150 L235,160" stroke="#FE1716" stroke-width="8" fill="none"/>
+                    <!-- Sorriso -->
+                    <path id="sorriso" d="M75,190 A80,80 0 0,0 225,190" stroke="#FE1716" stroke-width="20" fill="none"/>
+                </svg>
+                <span class="logo-text">Desio Libera</span>
+            </a>
+            
+            <!-- Pulsante menu hamburger (aggiunto) -->
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#principi">Principi</a></li>
+                <li><a href="#testimonianze">Testimonianze</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contatti">Contatti</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Overlay per il menu mobile (aggiunto) -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    <!-- Mini-header che appare durante lo scroll (aggiunto) -->
+    <div class="mini-header" id="mini-header">
+        <div class="mini-header-content">
+            <a href="#" class="mini-logo">
+                <svg class="mini-logo-img" width="40" height="40" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Versione più semplice del logo per il mini-header -->
+                    <circle cx="150" cy="150" r="150" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+                    <text x="52" y="120" font-family="Montserrat, sans-serif" font-weight="700" font-size="40" fill="#000000">DL</text>
+                    <path id="mini-smile" d="M75,190 A80,80 0 0,0 225,190" stroke="#FE1716" stroke-width="15" fill="none"/>
+                </svg>
+                <span class="mini-logo-text">Desio Libera</span>
+            </a>
+            
+            <!-- Pulsante menu hamburger nel mini-header -->
+            <div class="menu-toggle" id="mini-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero section -->
+    <section class="section hero" id="home">
+        <div class="container">
+            <div class="hero-content" data-aos="fade-right" data-aos-duration="1000">
+                <h1>Desio Libera: Un Nuovo Futuro per la Nostra Città</h1>
+                <p>Il programma della nostra lista civica si basa su principi di equità, sostenibilità e innovazione. Insieme possiamo costruire una Desio più giusta e prospera.</p>
+                <a href="#principi" class="btn">Scopri il Programma</a>
+            </div>
+        </div>
+        <div class="hero-bg" class="rellax" data-rellax-speed="-2"></div>
+        <div class="floating-elements">
+            <div class="floating-element shape1 rellax" data-rellax-speed="-1"></div>
+            <div class="floating-element shape2 rellax" data-rellax-speed="1"></div>
+            <div class="floating-element shape3 rellax" data-rellax-speed="-2"></div>
+            <div class="floating-element shape4 rellax" data-rellax-speed="2"></div>
+        </div>
+    </section>
+
+    <!-- Principi politici -->
+    <section class="section principle" id="principi">
+        <div class="container">
+            <div class="principle-content">
+                <div class="principle-text" data-aos="fade-right" data-aos-duration="800" data-aos-offset="300">
+                    <h2>Sostenibilità Ambientale</h2>
+                    <p>Il nostro pianeta merita rispetto e protezione. Ci impegniamo a promuovere politiche che riducano l'impatto ambientale e favoriscano la transizione verso un'economia sostenibile.</p>
+                    <p>Obiettivi concreti:</p>
+                    <ul>
+                        <li>Riduzione del 50% delle emissioni di CO2 entro 2030</li>
+                        <li>Investimenti in energie rinnovabili</li>
+                        <li>Promozione dell'economia circolare</li>
+                    </ul>
+                </div>
+                <div class="principle-image" data-aos="zoom-in-left" data-aos-duration="1000" data-aos-delay="200">
+                    <img src="400.png" alt="Sostenibilità Ambientale">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section principle">
+        <div class="container">
+            <div class="principle-content">
+                <div class="principle-text" data-aos="fade-left" data-aos-duration="800" data-aos-offset="300">
+                    <h2>Innovazione e Lavoro</h2>
+                    <p>L'innovazione tecnologica deve essere al servizio delle persone. Promuoviamo politiche che favoriscano la creazione di posti di lavoro di qualità e una transizione digitale inclusiva.</p>
+                    <p>Le nostre proposte:</p>
+                    <ul>
+                        <li>Formazione continua per i lavoratori</li>
+                        <li>Incentivi fiscali per startup innovative</li>
+                        <li>Investimenti in ricerca e sviluppo</li>
+                    </ul>
+                </div>
+                <div class="principle-image" data-aos="zoom-in-right" data-aos-duration="1000" data-aos-delay="200">
+                    <img src="400.png" alt="Innovazione e Lavoro">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section principle">
+        <div class="container">
+            <div class="principle-content">
+                <div class="principle-text" data-aos="fade-right" data-aos-duration="800" data-aos-offset="300">
+                    <h2>Equità Sociale</h2>
+                    <p>Crediamo in una società che offra pari opportunità a tutti. Ci impegniamo a ridurre le disuguaglianze e a garantire l'accesso universale ai servizi essenziali.</p>
+                    <p>Azioni concrete:</p>
+                    <ul>
+                        <li>Riforma fiscale progressiva</li>
+                        <li>Potenziamento del sistema sanitario pubblico</li>
+                        <li>Sostegno alle famiglie e politiche per la natalità</li>
+                    </ul>
+                </div>
+                <div class="principle-image" data-aos="zoom-in-left" data-aos-duration="1000" data-aos-delay="200">
+                    <img src="400.png" alt="Equità Sociale">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonianza con effetto parallasse -->
+    <section class="section testimonial" id="testimonianze">
+        <div class="testimonial-pattern" class="rellax" data-rellax-speed="-1"></div>
+        <div class="container">
+            <div class="testimonial-content" data-aos="fade-up" data-aos-duration="1000">
+                <blockquote>
+                    Il programma "Desio Libera" rappresenta una visione coraggiosa e concreta per il futuro della nostra città. È il momento di dare priorità ai cittadini e alla qualità della vita.
+                </blockquote>
+                <cite>- Maria Rossi, cittadina di Desio</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sezione team -->
+    <section class="section team" id="team">
+        <div class="container">
+            <h2 data-aos="fade-up" data-aos-duration="800">Il Nostro Team</h2>
+            <div class="team-grid">
+                <div class="team-member" data-aos="flip-up" data-aos-duration="800" data-aos-anchor-placement="top-center">
+                    <img class="member-img" src="600.png" alt="Marco Bianchi">
+                    <div class="member-info">
+                        <h3 class="member-name">Marco Bianchi</h3>
+                        <p class="member-role">Coordinatore Nazionale</p>
+                        <p class="member-bio">Esperto di politiche economiche con 15 anni di esperienza nel settore pubblico e privato.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member" data-aos="flip-up" data-aos-duration="800" data-aos-delay="100" data-aos-anchor-placement="top-center">
+                    <img class="member-img" src="600.png" alt="Laura Verdi">
+                    <div class="member-info">
+                        <h3 class="member-name">Laura Verdi</h3>
+                        <p class="member-role">Responsabile Ambiente</p>
+                        <p class="member-bio">Biologa e attivista ambientale, ha collaborato con le principali organizzazioni internazionali.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member" data-aos="flip-up" data-aos-duration="800" data-aos-delay="200" data-aos-anchor-placement="top-center">
+                    <img class="member-img" src="600.png" alt="Antonio Russo">
+                    <div class="member-info">
+                        <h3 class="member-name">Antonio Russo</h3>
+                        <p class="member-role">Responsabile Innovazione</p>
+                        <p class="member-bio">Imprenditore tech con una visione chiara sul futuro digitale del paese.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member" data-aos="flip-up" data-aos-duration="800" data-aos-delay="300" data-aos-anchor-placement="top-center">
+                    <img class="member-img" src="600.png" alt="Giulia Moretti">
+                    <div class="member-info">
+                        <h3 class="member-name">Giulia Moretti</h3>
+                        <p class="member-role">Responsabile Politiche Sociali</p>
+                        <p class="member-bio">Sociologa con esperienza decennale nel terzo settore e nelle politiche di inclusione.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section cta" id="contatti">
+        <div class="cta-overlay"></div>
+        <div class="container">
+            <div data-aos="zoom-in" data-aos-duration="800">
+                <h2>Unisciti a Noi</h2>
+                <p>Condividi la nostra visione e partecipa attivamente al cambiamento. Insieme possiamo costruire un futuro migliore per Desio.</p>
+                <a href="mailto:info@desiolibera.it?subject=Voglio%20unirmi%20a%20Desio%20Libera&body=Ciao,%0A%0ASono%20interessato/a%20a%20partecipare%20alla%20lista%20civica%20Desio%20Libera.%0A%0ANome:%20%0ACognome:%20%0ATelefono:%20%0A%0AIn%20che%20modo%20vorrei%20contribuire:%20%0A%0AGrazie!" class="btn">Unisciti al cambiamento</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Desio Libera</h3>
+                    <p>Una lista civica per un futuro sostenibile, innovativo ed equo per Desio.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Collegamenti Rapidi</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#principi">Principi</a></li>
+                        <li><a href="#testimonianze">Testimonianze</a></li>
+                        <li><a href="#team">Team</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Contatti</h4>
+                    <ul>
+                        <li>Email: info@desiolibera.it</li>
+                        <li>Telefono: +39 02 1234567</li>
+                        <li>Indirizzo: Via Milano 45, Desio</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Desio Libera. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script per le animazioni e interazioni -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inizializzazione AOS per animazioni allo scroll
+            AOS.init({
+                duration: 800,
+                easing: 'cubic-bezier(0.25, 0.1, 0.25, 1.0)',
+                once: false,
+                mirror: true,
+                anchorPlacement: 'center-bottom',
+                offset: 120,
+                delay: 100
+            });
+            
+            // Inizializzazione Rellax per effetti parallasse solo sugli elementi con classe .rellax
+            if (document.querySelectorAll('.rellax').length > 0) {
+                var rellax = new Rellax('.rellax');
+            }
+            
+            // Registra il plugin ScrollTrigger per GSAP
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Header con transizione fluida e avanzata
+            const header = document.getElementById('header');
+            let lastScrollTop = 0;
+            let ticking = false;
+
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        // Aggiunge classe scrolled in base alla posizione
+                        if (scrollTop > 50) {
+                            header.classList.add('scrolled');
+                        } else {
+                            header.classList.remove('scrolled');
+                        }
+                        
+                        // Aggiunge classe per nascondere header quando si scrolla verso il basso
+                        if (scrollTop > lastScrollTop && scrollTop > 200) {
+                            header.classList.add('header-hidden');
+                        } else {
+                            header.classList.remove('header-hidden');
+                        }
+                        
+                        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                        ticking = false;
+                    });
+                    
+                    ticking = true;
+                }
+            });
+            
+            // Animazione del sorriso migliorata con GSAP
+            const logoImg = document.getElementById('logo-img');
+            const smile = document.getElementById('sorriso');
+
+            // Imposta il punto di origine per la trasformazione
+            gsap.set(smile, { transformOrigin: '150px 190px' });
+
+            // Animazione costante sottile
+            const smileAnimation = gsap.to(smile, {
+                scaleX: 1.08,
+                duration: 1.5,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                paused: true
+            });
+
+            // Animazione durante lo scroll con intensità variabile
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
+                
+                if (scrollPosition < 800) {
+                    // Calcola l'intensità dell'animazione basata sullo scroll
+                    const intensity = Math.max(0, 1 - (scrollPosition / 800));
+                    
+                    // Attiva l'animazione se necessario
+                    if (!smileAnimation.isActive()) {
+                        smileAnimation.play();
+                    }
+                    
+                    // Modifica l'ampiezza dell'animazione basata sullo scroll
+                    smileAnimation.timeScale(0.8 + (intensity * 0.4));
+                    gsap.to(smile, {
+                        duration: 0.3,
+                        attr: { 
+                            "stroke-width": 16 + (intensity * 4)
+                        }
+                    });
+                } else {
+                    // Pausa l'animazione quando si scrolla troppo
+                    smileAnimation.pause();
+                    gsap.to(smile, {
+                        duration: 0.5,
+                        attr: { "stroke-width": 20 }
+                    });
+                }
+            });
+
+            // Animazione all'hover potenziata
+            logoImg.addEventListener('mouseenter', function() {
+                gsap.to(smile, {
+                    duration: 0.4,
+                    scaleX: 1.15,
+                    attr: { "stroke-width": 24 },
+                    ease: "back.out(1.7)"
+                });
+            });
+
+            logoImg.addEventListener('mouseleave', function() {
+                gsap.to(smile, {
+                    duration: 0.6,
+                    scaleX: 1,
+                    attr: { "stroke-width": 20 },
+                    ease: "elastic.out(1, 0.3)"
+                });
+            });
+            
+            // Effetto parallasse potenziato per hero section
+            gsap.to('.hero-bg', {
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                scale: 1.15,
+                y: '10%',
+                ease: 'power1.out'
+            });
+
+            // Elementi fluttuanti con effetto parallasse
+            gsap.utils.toArray('.floating-element').forEach((element, i) => {
+                const depth = parseFloat(element.getAttribute('data-speed')) || (i * 0.1 + 0.1);
+                gsap.to(element, {
+                    scrollTrigger: {
+                        trigger: '.hero',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: true
+                    },
+                    y: `${-50 * depth}%`,
+                    x: `${20 * depth}%`,
+                    ease: 'none'
+                });
+            });
+            
+            // Animazione per la sezione testimonianze (modificata per usare un elemento reale)
+            gsap.to('.testimonial-pattern', {
+                scrollTrigger: {
+                    trigger: '.testimonial',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                backgroundPosition: '100% 100%',
+                ease: 'none'
+            });
+            
+            // Animazione smooth scroll per i link di navigazione
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Menu hamburger e mini-header integrato
+            // Seleziona gli elementi necessari
+            const menuToggle = document.getElementById('menu-toggle');
+            const miniMenuToggle = document.getElementById('mini-menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const miniHeader = document.getElementById('mini-header');
+            
+            // Funzione per gestire l'apertura/chiusura del menu mobile
+            function toggleMenu() {
+                menuToggle.classList.toggle('active');
+                miniMenuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+            }
+            
+            // Event listener per il pulsante hamburger principale
+            menuToggle.addEventListener('click', toggleMenu);
+            
+            // Event listener per il pulsante hamburger nel mini-header
+            miniMenuToggle.addEventListener('click', toggleMenu);
+            
+            // Event listener per l'overlay (per chiudere il menu quando si clicca fuori)
+            menuOverlay.addEventListener('click', toggleMenu);
+            
+            // Event listener per i link del menu (per chiudere il menu dopo aver cliccato un link)
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (navLinks.classList.contains('active')) {
+                        toggleMenu();
+                    }
+                });
+            });
+            
+            // Gestione dello scroll per mostrare/nascondere il mini-header
+            let headerHeight = header.offsetHeight;
+            
+            window.addEventListener('scroll', function() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Gestione dello scroll per il mini-header
+                if (scrollTop > headerHeight) {
+                    // Mostra il mini-header quando si scrolla verso l'alto
+                    if (scrollTop < lastScrollTop) {
+                        miniHeader.classList.add('visible');
+                    } else {
+                        // Nascondi il mini-header quando si scrolla verso il basso
+                        // (ma non se il menu è aperto)
+                        if (!navLinks.classList.contains('active')) {
+                            miniHeader.classList.remove('visible');
+                        }
+                    }
+                    
+                    // Gestione dell'header principale (modifica comportamento esistente)
+                    // Non nascondiamo completamente l'header in modalità mobile
+                    if (window.innerWidth <= 768) {
+                        header.classList.add('scrolled');
+                        if (scrollTop > lastScrollTop && scrollTop > 200) {
+                            // In mobile, manteniamo il logo visibile ma nascondiamo il resto
+                            header.classList.add('header-hidden');
+                        } else {
+                            header.classList.remove('header-hidden');
+                        }
+                    } else {
+                        // Comportamento desktop rimane invariato
+                        if (scrollTop > 50) {
+                            header.classList.add('scrolled');
+                        } else {
+                            header.classList.remove('scrolled');
+                        }
+                        
+                        if (scrollTop > lastScrollTop && scrollTop > 200) {
+                            header.classList.add('header-hidden');
+                        } else {
+                            header.classList.remove('header-hidden');
+                        }
+                    }
+                } else {
+                    // Nascondi il mini-header quando si è in cima alla pagina
+                    miniHeader.classList.remove('visible');
+                    
+                    // Rimuovi le classi dall'header principale
+                    header.classList.remove('scrolled');
+                    header.classList.remove('header-hidden');
+                }
+            });
+            
+            // Aggiorna i valori quando la finestra viene ridimensionata
+            window.addEventListener('resize', function() {
+                headerHeight = header.offsetHeight;
+                
+                // Chiudi il menu se la finestra viene ridimensionata oltre i 768px
+                if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
+                    toggleMenu();
+                }
+            });
+
+            // Ottimizzazioni per la performance
+            
+            // 1. Lazy loading delle immagini
+            const images = document.querySelectorAll('.principle-image img, .member-img');
+            
+            // Configurazione dell'Intersection Observer
+            const imgOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            // Funzione di callback quando un'immagine diventa visibile
+            const loadImage = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Carica l'immagine quando diventa visibile
+                        const img = entry.target;
+                        const src = img.getAttribute('data-src');
+                        
+                        if (src) {
+                            img.src = src;
+                            // Rimuovi l'attributo data-src per non caricare l'immagine più volte
+                            img.removeAttribute('data-src');
+                            // Smetti di osservare l'immagine una volta caricata
+                            observer.unobserve(img);
+                        }
+                    }
+                });
+            };
+            
+            // Crea l'observer
+            if ('IntersectionObserver' in window) {
+                const imgObserver = new IntersectionObserver(loadImage, imgOptions);
+                
+                // Osserva ogni immagine
+                images.forEach(image => {
+                    // Solo se l'immagine non è già stata caricata
+                    if (!image.complete) {
+                        // Archivia l'URL originale in data-src se non è già stato fatto
+                        if (!image.hasAttribute('data-src')) {
+                            image.setAttribute('data-src', image.src);
+                            // Usa un placeholder o un'immagine a bassa risoluzione
+                            // Nota: dovresti avere un vero placeholder. Se non ce l'hai, puoi lasciare l'immagine originale
+                            // image.src = 'path/to/placeholder.png';
+                        }
+                        // Inizia a osservare l'immagine
+                        imgObserver.observe(image);
+                    }
+                });
+            }
+            
+            // 2. Throttling degli eventi di scroll (migliorato)
+            let isScrolling;
+            let scrollTimeout;
+            
+            window.addEventListener('scroll', function() {
+                // Chiara il timeout precedente
+                window.clearTimeout(scrollTimeout);
+                
+                // Imposta un nuovo timeout
+                scrollTimeout = setTimeout(function() {
+                    // Esegui operazioni dopo che lo scrolling è terminato
+                    // Puoi attivare animazioni o altri effetti qui
+                }, 100);
+            }, { passive: true });
+            
+            // 3. Preload dei link importanti
+            function preloadLinks() {
+                const links = document.querySelectorAll('.nav-links a');
+                links.forEach(link => {
+                    if (link.getAttribute('href').startsWith('#')) {
+                        const section = document.querySelector(link.getAttribute('href'));
+                        if (section) {
+                            section.setAttribute('data-preloaded', 'true');
+                        }
+                    }
+                });
+            }
+            
+            // Chiamare preloadLinks dopo che la pagina è completamente caricata
+            window.addEventListener('load', preloadLinks);
+        });
+    </script>
+</body>
+</html>
